@@ -5,53 +5,129 @@
       <img src="@/assets/pcf/pdf_game/header.png" style="width: 100vw;" />
     </div>
 
-    <div class="prize-placeholder pa-8">
+    <!-- <div class="prize-placeholder pa-8">
       <div class="prize-title pt-4" style="font-size: 2rem; font-weight: 600"></div>
-    </div>
+    </div> -->
 
-    <!-- draw page -->
-    <div class="draw-page" v-show="state === 1">
-      <!-- draw tickets -->
+    <!-- <hide-at breakpoint="large">
+      medium
+    </hide-at> -->
 
-      <div class="draw-box shimmer">
-        <ul id="candidateList" ref="candidateList" @animationend="celebrate">
-          <li class="item-1" v-for="(token, index) in tokenList" :key="index">{{ token.id }}</li>
-        </ul>
-      </div>
-      <div>
-        <img
-          class="start-button"
-          @click="
-            activateClass();
-            getUserList();
-          "
-          src="@/assets/pcf/pdf_game/start_button.png"
-          style="height: 8vh"
-        />
-      </div>
-    </div>
-
-    <div class="winning-page" v-show="state === 4">
-      <div class="winning-box">
-        <div class="winning-token shimmer">Congratulations!</div>
-        <div class="winning-plate">
-          <div class="winning-token shimmer">{{ winningToken.id }}</div>
-          <div class="winning-token shimmer">{{ winningToken.name }}</div>
+    <hide-at breakpoint="small">
+      <!-- draw page -->
+      <div class="draw-page" v-show="state === 1">
+        <!-- draw tickets -->
+        <div class="draw-box shimmer">
+          <ul id="candidateList" ref="candidateListDesktop" @animationend="celebrate">
+            <li class="item-1" v-for="(token, index) in tokenList" :key="index">{{ token.id }}</li>
+          </ul>
+        </div>
+        <div>
+          <img
+            class="start-button"
+            @click="
+              activateClassDesktop();
+              getUserList();
+            "
+            src="@/assets/pcf/pdf_game/start_button.png"
+            style="height: 8vh"
+          />
         </div>
       </div>
 
-      <div>
-        <img
-          class="start-button"
-          @click="
-            changeState(1);
-            getUserList();
-          "
-          src="@/assets/pcf/pdf_game/back_button.png"
-          style="height: 8vh"
-        />
+      <!-- <div class="winning-page" v-show="state === 4">
+        <div class="winning-box">
+          <div class="winning-token shimmer">Congratulations!</div>
+          <div class="winning-plate">
+            <div class="winning-token shimmer">{{ winningToken.id }}</div>
+            <div class="winning-token shimmer">{{ winningToken.name }}</div>
+          </div>
+        </div>
+
+        <div>
+          <img
+            class="start-button"
+            @click="
+              changeState(1);
+              getUserList();
+            "
+            src="@/assets/pcf/pdf_game/back_button.png"
+            style="height: 8vh"
+          />
+        </div>
+      </div> -->
+    </hide-at>
+
+    <show-at breakpoint="mediumAndBelow">
+      <!-- draw page -->
+      <div class="draw-page" v-show="state === 1">
+        <!-- draw tickets -->
+        <div class="draw-box-mobile shimmer">
+          <ul id="candidateList" ref="candidateListMobile" @animationend="celebrate">
+            <li class="item-1" v-for="(token, index) in tokenList" :key="index">{{ token.id }}</li>
+          </ul>
+        </div>
+        <div>
+          <img
+            class="start-button"
+            @click="
+              activateClassMobile();
+              getUserList();
+            "
+            src="@/assets/pcf/pdf_game/start_button.png"
+            style="height: 8vh"
+          />
+        </div>
       </div>
-    </div>
+    </show-at>
+
+    <show-at breakpoint="mediumAndBelow">
+      <div class="winning-page" v-show="state === 4">
+        <div class="winning-box-mobile">
+          <div class="winning-token-mobile shimmer">Congratulations!</div>
+          <div class="winning-plate">
+            <div class="winning-token-mobile shimmer">{{ winningToken.id }}</div>
+            <div class="winning-token-mobile shimmer">{{ winningToken.name }}</div>
+          </div>
+        </div>
+
+        <div>
+          <img
+            class="start-button"
+            @click="
+              changeState(1);
+              getUserList();
+            "
+            src="@/assets/pcf/pdf_game/back_button.png"
+            style="height: 8vh"
+          />
+        </div>
+      </div>
+    </show-at>
+
+    <hide-at breakpoint="small">
+      <div class="winning-page" v-show="state === 4">
+        <div class="winning-box">
+          <div class="winning-token shimmer">Congratulations!</div>
+          <div class="winning-plate">
+            <div class="winning-token shimmer">{{ winningToken.id }}</div>
+            <div class="winning-token shimmer">{{ winningToken.name }}</div>
+          </div>
+        </div>
+
+        <div>
+          <img
+            class="start-button"
+            @click="
+              changeState(1);
+              getUserList();
+            "
+            src="@/assets/pcf/pdf_game/back_button.png"
+            style="height: 8vh"
+          />
+        </div>
+      </div>
+    </hide-at>
 
     <!-- footer ui -->
     <div class="pt-4 footer">
@@ -62,10 +138,11 @@
 
 <script>
 import userList from '../data/data.json';
+import { showAt, hideAt } from 'vue-breakpoints';
 
 export default {
   name: 'Luckydraw_v2',
-  components: {},
+  components: { showAt, hideAt },
   props: {
     restart: Boolean,
   },
@@ -139,10 +216,16 @@ export default {
       return array.sort(() => Math.random() - 0.5);
     },
 
-    activateClass() {
-      this.$refs.candidateList.classList.remove('scrollUp');
-      void this.$refs.candidateList.offsetWidth;
-      this.$refs.candidateList.classList.add('scrollUp');
+    activateClassDesktop() {
+      this.$refs.candidateListDesktop.classList.remove('scrollUp');
+      void this.$refs.candidateListDesktop.offsetWidth;
+      this.$refs.candidateListDesktop.classList.add('scrollUp');
+    },
+
+    activateClassMobile() {
+      this.$refs.candidateListMobile.classList.remove('scrollUp');
+      void this.$refs.candidateListMobile.offsetWidth;
+      this.$refs.candidateListMobile.classList.add('scrollUp');
     },
   },
 };
@@ -154,7 +237,6 @@ export default {
   /* border: #272522 10px solid; */
   background-image: url('../assets/pcf/pdf_game/bg.png');
   background-color: #dc8d18;
-  height: 60%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -173,6 +255,7 @@ export default {
 
 .draw-page,
 .winning-page {
+  padding-top: 2rem;
   display: inline-grid;
 }
 
@@ -188,6 +271,11 @@ export default {
   font-weight: bold;
   /* color: white; */
   /* width: 28vw; */
+}
+
+.winning-token-mobile {
+  font-size: 10vw;
+  font-weight: bold;
 }
 
 .winning-plate {
@@ -300,8 +388,8 @@ export default {
 .draw-box,
 .winning-box {
   height: 32vh;
-  width: 30vw;
-  max-width: 30vw;
+  width: 40vw;
+  max-width: 40vw;
   position: relative;
   overflow: hidden;
   font-size: 2.4rem;
@@ -315,13 +403,33 @@ export default {
   margin-bottom: 2rem;
 }
 
-.draw-box {
+.draw-box-mobile,
+.winning-box-mobile {
+  height: 50vh;
+  width: 90vw;
+  max-width: 90vw;
+  position: relative;
+  overflow: hidden;
+  font-size: 2.4rem;
+  font-weight: bold;
+  line-height: 4.8rem;
+  margin: 0px;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: #1d2227;
+  margin-bottom: 2rem;
+}
+
+.draw-box,
+.draw-box-mobile {
   border: 0.5rem solid #1d2227;
   background: #fc9a213d;
   /* letter-spacing: 0.3rem; */
 }
 
-.winning-box {
+.winning-box,
+.winning-box-mobile {
   background: #ff920ea6;
   display: grid;
   align-content: center;
@@ -332,7 +440,8 @@ li {
   letter-spacing: 1rem;
 }
 
-.draw-box::before {
+.draw-box::before,
+.draw-box-mobile::before {
   top: 0;
   left: 0;
   z-index: 1;
@@ -342,9 +451,11 @@ li {
   position: absolute;
   font-size: 2.4rem;
   color: white;
+  border-radius: 0.5rem;
   background: linear-gradient(180deg, #ff9800, rgba(255, 142, 113, 0));
 }
-.draw-box::after {
+.draw-box::after,
+.draw-box-mobile::after {
   bottom: 0;
   left: 0;
   z-index: 1;
@@ -354,6 +465,7 @@ li {
   position: absolute;
   font-size: 2.4rem;
   color: white;
+  border-radius: 0.5rem;
   background: linear-gradient(180deg, rgba(255, 142, 113, 0), #ff9800);
 }
 
